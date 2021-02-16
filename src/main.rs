@@ -1,3 +1,7 @@
+use tc::tokenizer;
+
 fn main() {
-    println!("Hello, world!");
+    let teststr = String::from("(asdfsdaf)");
+	let tokens = tokenizer::tokenize(&teststr);  
+	println!("{:?}", tokens);
 }
