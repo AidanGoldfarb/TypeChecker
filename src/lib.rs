@@ -1,7 +1,8 @@
 //use std::iter::Peekable;
 
-pub mod types;
+pub mod parser;
 pub mod tokenizer;
+pub mod types;
 
 // pub struct Node{
 // 	pub children: Vec<Node>,

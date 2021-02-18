@@ -1,1 +1,1 @@
-/home/aidan/Spring2021/CS200/assignments/tc/target/debug/libtc.rlib: /home/aidan/Spring2021/CS200/assignments/tc/src/lib.rs
+/home/aidan/Spring2021/CS200/assignments/TypeChecker/target/debug/libtc.rlib: /home/aidan/Spring2021/CS200/assignments/TypeChecker/src/lib.rs /home/aidan/Spring2021/CS200/assignments/TypeChecker/src/tokenizer.rs /home/aidan/Spring2021/CS200/assignments/TypeChecker/src/types.rs
