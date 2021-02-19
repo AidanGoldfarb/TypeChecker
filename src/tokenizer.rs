@@ -1,9 +1,10 @@
 use crate::types;
 //use tc::types::Token;
-pub fn tokenize(input: &String) -> Vec<types::Token> {
+pub fn tokenize(input: &str) -> Vec<types::Token> {
     let mut result = Vec::new();
     let mut it = input.chars().peekable();
     while let Some(&c) = it.peek() {
+    	//it.next();
         match c {
             '(' => {
                 //(
@@ -43,25 +44,38 @@ pub fn tokenize(input: &String) -> Vec<types::Token> {
                 } else {
                     result.push(types::Token::FdC);
                     it.next(); //C
-                    it.next(); //
+                    //it.next(); //
                 }
             }
-            'n' => {
-                //numC(val) FIXME!
-                let mut val;
-                it.next(); //u
-                it.next(); //m
-                it.next(); //C
-                it.next(); //(
-                it.next(); //idk man
-                let mut n = it.next(); //#
-                val = String::new();
-                while n != Some(')') {
-                    val.push(n.unwrap());
-                    n = it.next();
+             'n' => { //numC
+                let mut val = String::new();
+                while it.peek() != Some(&')'){
+                	if it.peek().unwrap().is_digit(10){
+                		val.push(*it.peek().unwrap());
+                	}
+                	it.next();
                 }
+                it.next();
                 result.push(types::Token::NumC(val.parse::<i32>().unwrap()));
             }
+            // 'n' => {
+            //     //numC(val)
+            //     let mut val;
+            //     it.next(); //u
+            //     it.next(); //m
+            //     it.next(); //C
+            //     it.next(); //(
+            //     it.next(); //idk man
+            //     let mut n = it.next(); //#
+            //     println!("current n: {:?}", n);
+            //     val = String::new();
+            //     while n != Some(')') {
+            //         val.push(n.unwrap());
+            //         n = it.next();
+            //     }
+            //     println!("FOUND AN INT: {:?}", val);
+            //     result.push(types::Token::NumC(val.parse::<i32>().unwrap()));
+            // }
             'p' => {
                 //plusC
                 result.push(types::Token::PlusC);
@@ -227,4 +241,37 @@ mod tests {
         let res = tokenize(&String::from("(ifC(trueC,ifC(numC(932),falseC)))"));
         assert_eq!(vec, res);
     }
+
+    #[test]
+    fn test_fdc_tokenize() {
+        let mut vec = Vec::new();
+        vec.push(types::Token::FdC);
+        vec.push(types::Token::LeftParen);
+        vec.push(types::Token::TrueC);
+        vec.push(types::Token::Comma);
+        vec.push(types::Token::TrueC);
+        vec.push(types::Token::Comma);
+        vec.push(types::Token::TrueC);
+        vec.push(types::Token::Comma);
+        vec.push(types::Token::TrueC);
+        vec.push(types::Token::RightParen);
+        let res = tokenize(&String::from("fdC(trueC,trueC,trueC,trueC)"));
+        assert_eq!(vec, res);
+    }
+
+    #[test]
+    fn test_ifc_tokenize() {
+        let mut vec = Vec::new();
+        vec.push(types::Token::IfC);
+        vec.push(types::Token::LeftParen);
+        vec.push(types::Token::TrueC);
+        vec.push(types::Token::Comma);
+        vec.push(types::Token::NumC(12345));
+        vec.push(types::Token::Comma);
+        vec.push(types::Token::NumC(67890));
+        vec.push(types::Token::RightParen);
+        let res = tokenize(&String::from("ifC(trueC,numC(12345),num(67890))"));
+        assert_eq!(vec, res);
+    }
+
 }
