@@ -4,7 +4,7 @@ pub fn tokenize(input: &str) -> Vec<types::Token> {
     let mut result = Vec::new();
     let mut it = input.chars().peekable();
     while let Some(&c) = it.peek() {
-    	//it.next();
+        //it.next();
         match c {
             '(' => {
                 //(
@@ -44,16 +44,17 @@ pub fn tokenize(input: &str) -> Vec<types::Token> {
                 } else {
                     result.push(types::Token::FdC);
                     it.next(); //C
-                    //it.next(); //
+                               //it.next(); //
                 }
             }
-             'n' => { //numC
+            'n' => {
+                //numC
                 let mut val = String::new();
-                while it.peek() != Some(&')'){
-                	if it.peek().unwrap().is_digit(10){
-                		val.push(*it.peek().unwrap());
-                	}
-                	it.next();
+                while it.peek() != Some(&')') {
+                    if it.peek().unwrap().is_digit(10) {
+                        val.push(*it.peek().unwrap());
+                    }
+                    it.next();
                 }
                 it.next();
                 result.push(types::Token::NumC(val.parse::<i32>().unwrap()));
@@ -273,5 +274,4 @@ mod tests {
         let res = tokenize(&String::from("ifC(trueC,numC(12345),num(67890))"));
         assert_eq!(vec, res);
     }
-
 }

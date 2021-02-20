@@ -119,7 +119,7 @@ pub fn parse(input: &mut Vec<types::Token>) -> bool {
         }
         //cur_token = input.remove(0);
         println!("cur_token after match: {:?}", cur_token);
-        return true
+        return true;
     }
     println!("Returing");
     true
@@ -189,25 +189,23 @@ mod tests {
 
     #[test]
     fn test_combo_1() {
-
-        let mut res =
-            tokenizer::tokenize(&String::from("eqC(eqC(numC(1),numC(2)),numC(3))"));
+        let mut res = tokenizer::tokenize(&String::from("eqC(eqC(numC(1),numC(2)),numC(3))"));
         assert!(parse(&mut res));
     }
 
     #[test]
     fn test_combo_2() {
-
-        let mut res =
-            tokenizer::tokenize(&String::from("eqC(eqC(numC(1),numC(2)),eqC(numC(3),numC(4)))"));
+        let mut res = tokenizer::tokenize(&String::from(
+            "eqC(eqC(numC(1),numC(2)),eqC(numC(3),numC(4)))",
+        ));
         assert!(parse(&mut res));
     }
 
     #[test]
     fn test_combo_3() {
-
-        let mut res =
-            tokenizer::tokenize(&String::from("eqC(eqC(numC(1),numC(2)),ifC(trueC,num(3),num(4)))"));
+        let mut res = tokenizer::tokenize(&String::from(
+            "eqC(eqC(numC(1),numC(2)),ifC(trueC,num(3),num(4)))",
+        ));
         assert!(parse(&mut res));
     }
     // #[test]
