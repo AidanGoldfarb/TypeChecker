@@ -23,12 +23,13 @@ pub fn tokenize(input: &str) -> Vec<types::Token> {
             }
             't' => {
                 //true
+                it.next();
+                assert_eq!(it.next().unwrap(), 'r');
+                assert_eq!(it.next().unwrap(), 'u');
+                assert_eq!(it.next().unwrap(), 'e');
+                assert_eq!(it.next().unwrap(), 'C');
+                
                 result.push(types::Token::TrueC);
-                it.next();
-                it.next();
-                it.next();
-                it.next();
-                it.next();
             }
             'f' => {
                 //false/fdc
@@ -37,14 +38,17 @@ pub fn tokenize(input: &str) -> Vec<types::Token> {
                                               //println!("its not a its {}", tmp);
                 if tmp == 'a' {
                     result.push(types::Token::FalseC);
-                    it.next(); //l
-                    it.next(); //s
-                    it.next(); //e
-                    it.next(); //
-                } else {
+                    assert_eq!(it.next().unwrap(), 'l');
+                    assert_eq!(it.next().unwrap(), 's');
+                    assert_eq!(it.next().unwrap(), 'e');
+                    assert_eq!(it.next().unwrap(), 'C');
+                } else if tmp == 'd'{
                     result.push(types::Token::FdC);
                     it.next(); //C
                                //it.next(); //
+                }
+                else{
+                	panic!("bad")
                 }
             }
             'n' => {
@@ -59,48 +63,32 @@ pub fn tokenize(input: &str) -> Vec<types::Token> {
                 it.next();
                 result.push(types::Token::NumC(val.parse::<i32>().unwrap()));
             }
-            // 'n' => {
-            //     //numC(val)
-            //     let mut val;
-            //     it.next(); //u
-            //     it.next(); //m
-            //     it.next(); //C
-            //     it.next(); //(
-            //     it.next(); //idk man
-            //     let mut n = it.next(); //#
-            //     println!("current n: {:?}", n);
-            //     val = String::new();
-            //     while n != Some(')') {
-            //         val.push(n.unwrap());
-            //         n = it.next();
-            //     }
-            //     println!("FOUND AN INT: {:?}", val);
-            //     result.push(types::Token::NumC(val.parse::<i32>().unwrap()));
-            // }
             'p' => {
                 //plusC
                 result.push(types::Token::PlusC);
-                it.next(); //l
-                it.next(); //u
-                it.next(); //s
-                it.next(); //C
                 it.next(); //
+                assert_eq!(it.next().unwrap(), 'l');
+                assert_eq!(it.next().unwrap(), 'u');
+                assert_eq!(it.next().unwrap(), 's');
+                assert_eq!(it.next().unwrap(), 'C');
             }
             'm' => {
                 //multC
                 result.push(types::Token::MultC);
-                it.next(); //u
-                it.next(); //l
-                it.next(); //t
-                it.next(); //C
                 it.next(); //
+                assert_eq!(it.next().unwrap(), 'u');
+                assert_eq!(it.next().unwrap(), 'l');
+                assert_eq!(it.next().unwrap(), 't');
+                assert_eq!(it.next().unwrap(), 'C');
             }
             'e' => {
                 //eqC
                 result.push(types::Token::EqC);
                 it.next(); //q
-                it.next(); //C
-                it.next(); //
+                assert_eq!(it.next().unwrap(), 'q');
+                assert_eq!(it.next().unwrap(), 'C');
+                // it.next(); //C
+                // it.next(); //
             }
             'i' => {
                 //ifC/idC
@@ -118,21 +106,35 @@ pub fn tokenize(input: &str) -> Vec<types::Token> {
                 //appC
                 result.push(types::Token::AppC);
                 it.next(); //p
-                it.next(); //p
-                it.next(); //c
-                it.next(); //
+                assert_eq!(it.next().unwrap(), 'p');
+                assert_eq!(it.next().unwrap(), 'p');
+                assert_eq!(it.next().unwrap(), 'C');
+                // it.next(); //p
+                // it.next(); //c
+                // it.next(); //
             }
             'r' => {
                 //recC
                 result.push(types::Token::RecC);
                 it.next(); //e
-                it.next(); //c
-                it.next(); //C
-                it.next(); //
+                assert_eq!(it.next().unwrap(), 'e');
+                assert_eq!(it.next().unwrap(), 'c');
+                assert_eq!(it.next().unwrap(), 'C');
+                // it.next(); //c
+                // it.next(); //C
+                // it.next(); //
+            }
+            '\"' => { //string
+            	let mut string  = String::new();
+            	while it.peek() != Some(&'\"') {
+                    string.push(*it.peek().unwrap());
+                    it.next();
+                }
+                it.next();
+                result.push(types::Token::Str(string));
             }
             ' ' => {
                 //handle whitespace
-
                 it.next();
             }
             _ => {

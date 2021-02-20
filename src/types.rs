@@ -12,7 +12,7 @@
 // 	RecC
 // }
 
-#[derive(Debug, PartialEq, Clone, Copy)]
+#[derive(Debug, PartialEq, Clone)]
 pub enum Token {
     LeftParen,  //
     RightParen, //
@@ -28,6 +28,11 @@ pub enum Token {
     AppC,       //
     FdC,        //
     RecC,
+    Str(String),
+    NumT,
+    FunT,
+    BoolT,
+
 }
 
 #[derive(Debug, PartialEq)]
@@ -43,12 +48,8 @@ pub enum Ast {
         left: Box<Ast>,
         right: Box<Ast>,
     },
-    TrueC {
-        val: Box<bool>,
-    },
-    FalseC {
-        val: Box<bool>,
-    },
+    TrueC,
+    FalseC,
     EqC {
         left: Box<Ast>,
         right: Box<Ast>,
@@ -59,26 +60,27 @@ pub enum Ast {
         second: Box<Ast>,
     },
     IdC {
-        strval: Box<String>,
+        strval: Box<Ast>,
     },
     AppC {
         left: Box<Ast>,
         right: Box<Ast>,
     },
     FdC {
-        strval: Box<String>,
-        t1: Box<Mytype>,
-        t2: Box<Mytype>,
+        strval: Box<Ast>,
+        t1: Box<Ast>, //mytype
+        t2: Box<Ast>, //mytype
         ex: Box<Ast>,
     },
     RecC {
-        str1v: Box<String>,
-        str2v: Box<String>,
-        t1: Box<Mytype>,
-        t2: Box<Mytype>,
+        str1v: Box<Ast>,
+        str2v: Box<Ast>,
+        t1: Box<Ast>, //mytype
+        t2: Box<Ast>, //mytype
         ex1: Box<Ast>,
         ex2: Box<Ast>,
     },
+    No,
 }
 
 #[derive(Debug, PartialEq)]
