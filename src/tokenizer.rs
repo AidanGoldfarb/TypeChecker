@@ -28,7 +28,7 @@ pub fn tokenize(input: &str) -> Vec<types::Token> {
                 assert_eq!(it.next().unwrap(), 'u');
                 assert_eq!(it.next().unwrap(), 'e');
                 assert_eq!(it.next().unwrap(), 'C');
-                
+
                 result.push(types::Token::TrueC);
             }
             'f' => {
@@ -42,26 +42,84 @@ pub fn tokenize(input: &str) -> Vec<types::Token> {
                     assert_eq!(it.next().unwrap(), 's');
                     assert_eq!(it.next().unwrap(), 'e');
                     assert_eq!(it.next().unwrap(), 'C');
-                } else if tmp == 'd'{
+                } else if tmp == 'd' {
                     result.push(types::Token::FdC);
                     it.next(); //C
                                //it.next(); //
+                } else if tmp == 'u' {
+                	//funT
+                	assert_eq!(it.next().unwrap(), 'n');
+                    assert_eq!(it.next().unwrap(), 'T');
+                    assert_eq!(it.next().unwrap(), '(');
+                    let t1;
+                    let t2;
+                    match it.next().unwrap() {
+                    	'n' => {
+                    		t1 = types::Mytype::NumT;
+                    		assert_eq!(it.next().unwrap(), 'u');
+                    		assert_eq!(it.next().unwrap(), 'm');
+                    		assert_eq!(it.next().unwrap(), 'T');
+                    	}
+                    	'b' => {
+                    		t1 = types::Mytype::BoolT;
+                    		assert_eq!(it.next().unwrap(), 'o');
+                    		assert_eq!(it.next().unwrap(), 'o');
+                    		assert_eq!(it.next().unwrap(), 'l');
+                    		assert_eq!(it.next().unwrap(), 'T');
+                    	}
+                    	_ => {t1 = types::Mytype::BoolT;},
+                    }
+                    it.next();
+                    match it.next().unwrap() {
+                    	'n' => {
+                    		t2 = types::Mytype::NumT;
+                    		assert_eq!(it.next().unwrap(), 'u');
+                    		assert_eq!(it.next().unwrap(), 'm');
+                    		assert_eq!(it.next().unwrap(), 'T');
+                    	}
+                    	'b' => {
+                    		t2 = types::Mytype::BoolT;
+                    		assert_eq!(it.next().unwrap(), 'o');
+                    		assert_eq!(it.next().unwrap(), 'o');
+                    		assert_eq!(it.next().unwrap(), 'l');
+                    		assert_eq!(it.next().unwrap(), 'T');
+                    	}
+                    	_ => {t2 = types::Mytype::BoolT;},
+                    }
+                    result.push(types::Token::FunT(t1.clone(),t2.clone()));
+
                 }
-                else{
-                	panic!("bad")
+
+                 else {
+                    panic!("bad")
                 }
             }
             'n' => {
                 //numC
                 let mut val = String::new();
-                while it.peek() != Some(&')') {
+                let mut flag = 0;
+                while it.peek() != Some(&')')  && flag == 0{
                     if it.peek().unwrap().is_digit(10) {
                         val.push(*it.peek().unwrap());
+                    }
+                    match it.peek().unwrap(){
+                    	'T' => {
+                    		println!("HERERER:");             
+                    		flag = 1;
+	                    	result.push(types::Token::NumT);
+	                    	()
+	                    }
+	                    _ => {
+	                    	//println!("ITTT:  {:?}", it.peek());
+	                    	()
+	                    },
                     }
                     it.next();
                 }
                 it.next();
-                result.push(types::Token::NumC(val.parse::<i32>().unwrap()));
+                if flag == 0 {
+	                result.push(types::Token::NumC(val.parse::<i32>().unwrap()));
+	            }
             }
             'p' => {
                 //plusC
@@ -113,31 +171,43 @@ pub fn tokenize(input: &str) -> Vec<types::Token> {
                 // it.next(); //c
                 // it.next(); //
             }
-            'r' => {
-                //recC
-                result.push(types::Token::RecC);
-                it.next(); //e
-                assert_eq!(it.next().unwrap(), 'e');
-                assert_eq!(it.next().unwrap(), 'c');
-                assert_eq!(it.next().unwrap(), 'C');
-                // it.next(); //c
-                // it.next(); //C
-                // it.next(); //
-            }
-            '\"' => { //string
-            	let mut string  = String::new();
-            	while it.peek() != Some(&'\"') {
+            // 'r' => {
+            //     //recC
+            //     result.push(types::Token::RecC);
+            //     it.next(); //e
+            //     assert_eq!(it.next().unwrap(), 'e');
+            //     assert_eq!(it.next().unwrap(), 'c');
+            //     assert_eq!(it.next().unwrap(), 'C');
+            //     // it.next(); //c
+            //     // it.next(); //C
+            //     // it.next(); //
+            // }
+            '\"' => {
+                //string
+                let mut string = String::new();
+                it.next();
+                while it.peek() != Some(&'\"') {
                     string.push(*it.peek().unwrap());
                     it.next();
                 }
                 it.next();
                 result.push(types::Token::Str(string));
             }
+            'b' => {
+            	//boolT
+            	it.next();
+	        	assert_eq!(it.next().unwrap(), 'o');
+	        	assert_eq!(it.next().unwrap(), 'o');
+	        	assert_eq!(it.next().unwrap(), 'l');
+	        	assert_eq!(it.next().unwrap(), 'T');
+				result.push(types::Token::BoolT);
+            }
             ' ' => {
                 //handle whitespace
                 it.next();
             }
             _ => {
+            	//println!("result {:?}", result);
                 panic!("bad")
             }
         }
@@ -148,6 +218,28 @@ pub fn tokenize(input: &str) -> Vec<types::Token> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn testType() {
+        let mut vec = Vec::new();
+        vec.push(types::Token::NumT);
+        let res = tokenize(&String::from("numT"));
+        assert_eq!(vec, res);
+    }
+
+
+    #[test]
+    fn test0() {
+        let mut vec = Vec::new();
+        vec.push(types::Token::IdC);
+        vec.push(types::Token::LeftParen);
+        vec.push(types::Token::Str("hello".to_string()));
+        vec.push(types::Token::RightParen);
+        let res = tokenize(&String::from("idC(\"hello\")"));
+        assert_eq!(vec, res);
+    }
+
+
 
     #[test]
     fn test1() {

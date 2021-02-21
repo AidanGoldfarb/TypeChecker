@@ -27,65 +27,65 @@ pub enum Token {
     IdC,        //
     AppC,       //
     FdC,        //
-    RecC,
+    //RecC,
     Str(String),
     NumT,
-    FunT,
+    FunT(Mytype,Mytype),
     BoolT,
-
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub enum Ast {
-    NumC {
+    NumCNode {
         val: Box<i32>,
     },
-    PlusC {
+    PlusCNode {
         left: Box<Ast>,
         right: Box<Ast>,
     },
-    MultC {
+    MultCNode {
         left: Box<Ast>,
         right: Box<Ast>,
     },
-    TrueC,
-    FalseC,
-    EqC {
+    TrueCNode,
+    FalseCNode,
+    EqCNode {
         left: Box<Ast>,
         right: Box<Ast>,
     },
-    IfC {
+    IfCNode {
         cond: Box<Ast>,
         first: Box<Ast>,
         second: Box<Ast>,
     },
-    IdC {
-        strval: Box<Ast>,
+    IdCNode {
+        strval: String,
     },
-    AppC {
+    AppCNode {
         left: Box<Ast>,
         right: Box<Ast>,
     },
-    FdC {
-        strval: Box<Ast>,
-        t1: Box<Ast>, //mytype
-        t2: Box<Ast>, //mytype
+    FdCNode {
+        strval: String,
+        t1: Box<Mytype>, //mytype
+        t2: Box<Mytype>, //mytype
         ex: Box<Ast>,
     },
-    RecC {
-        str1v: Box<Ast>,
-        str2v: Box<Ast>,
-        t1: Box<Ast>, //mytype
-        t2: Box<Ast>, //mytype
-        ex1: Box<Ast>,
-        ex2: Box<Ast>,
-    },
-    No,
+    // RecCNode {
+    //     str1v: Box<Ast>,
+    //     str2v: Box<Ast>,
+    //     t1: Box<Mytype>, //mytype
+    //     t2: Box<Mytype>, //mytype
+    //     ex1: Box<Ast>,
+    //     ex2: Box<Ast>,
+    // },
+    NoNode,
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub enum Mytype {
     NumT,
     BoolT,
-    FunT { t1: Box<Mytype>, t2: Box<Mytype> },
+    FunT { arg1: Box<Mytype>, arg2: Box<Mytype> },
 }
+// fdC("arg1", if(true, numT, idC("arg1"))
